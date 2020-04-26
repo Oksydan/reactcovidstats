@@ -1,26 +1,21 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import AllStats from './containers/AllStats/AllStats';
+import CountryStats from './containers/CountryStats/CountryStats';
+import { BrowserRouter, Switch, Route, Link } from "react-router-dom";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+const app = () => (
+  <BrowserRouter>
+    <Switch>
+      <Route path="/country/:name">
+        <CountryStats />
+      </Route>
+      <Route path="/">
+        <AllStats />
+      </Route>
+    </Switch>
+  </BrowserRouter>
+);
 
-export default App;
+
+
+export default app;
