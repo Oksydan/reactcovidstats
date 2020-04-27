@@ -1,62 +1,76 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, Fragment } from 'react';
 import { prepareData } from '../../utils/utils';
 import useFetchData from '../../hooks/useFetchData';
+import Loader from '../../components/UI/Loader/Loader';
 
 import StatsTable from '../../components/StatsTable/StatsTable';
 
 const AllStats = () => {
 
-    const [countriesStats, setCountriesStats] = useState(null);
-    const [continentsStats, setContinentsStats] = useState(null);
-    const [loading, setLoading] = useState(false);
-    const fetchStatsData = useFetchData();
+  const [countriesStats, setCountriesStats] = useState(null);
+  const [continentsStats, setContinentsStats] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const fetchStatsData = useFetchData();
 
 
-    const extractData = useCallback((data) => {
-      const continents = [];
+  const extractData = useCallback((data) => {
+    const continents = [];
 
-      const continentsNames = ['North-America', 'Europe', 'Asia', 'South-America', 'Oceania', 'Africa'];
+    const continentsNames = ['North-America', 'Europe', 'Asia', 'South-America', 'Oceania', 'Africa'];
 
-      const country = data.filter(el => {
-        if(continentsNames.indexOf(el.name) >= 0) {
+    const country = data.filter(el => {
+      if(continentsNames.indexOf(el.name) >= 0) {
+        continents.push(el);
+        return false;
+      } else {
+        if (el.name === 'All') {
           continents.push(el);
-          return false;
-        } else {
-          if (el.name === 'All') {
-            continents.push(el);
-          } 
-          return true;
-        }
-      })
+        } 
+        return true;
+      }
+    })
 
-      return [country, continents];
-    }, [])
+    return [country, continents];
+  }, [])
 
-    useEffect(() => {
-      fetchStatsData({
-        endPoint: 'statistics'
-      })
-      .then((response) => response.json())
-      .then((data) => {
-        const { response } = data;
-        const dataFormated = response.map((country) => prepareData(country));
+  useEffect(() => {
+    setLoading(true);
+    fetchStatsData({
+      endPoint: 'statistics'
+    })
+    .then((response) => response.json())
+    .then((data) => {
+      const { response } = data;
+      const dataFormated = response.map((country) => prepareData(country));
 
-        const [country, continents] = extractData(dataFormated);
+      const [country, continents] = extractData(dataFormated);
 
-        setCountriesStats(country);
-        setContinentsStats(continents);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-    }, [extractData]);
+      setCountriesStats(country);
+      setContinentsStats(continents);
+      setLoading(false);
+    })
+    .catch((err) => {
+      setLoading(false);
+      console.log(err);
+    });
+  }, [extractData]);
 
+  let content = null;
 
-    return (
-      <div>
-        {countriesStats ? <StatsTable stats={countriesStats} /> : null}
-      </div>
-    );
+  if (loading) {
+    content = <Loader />;
+  }
+
+  if (countriesStats && continentsStats) {
+    content = (
+      <Fragment>
+        <StatsTable stats={countriesStats} />
+        <StatsTable stats={continentsStats} />
+      </Fragment>
+    )
+  }
+
+  return content;
 
 };
 
