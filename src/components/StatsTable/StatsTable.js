@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -39,6 +40,7 @@ const columns = [
   {
     id: "name",
     label: "Country",
+    format: value => value !== 'All' ? <Link to={"/country/" + value}>{value}</Link> : value
   },
   {
     id: "totalCases",

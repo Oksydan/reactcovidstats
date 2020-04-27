@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { API_KEY } from '../../config/config';
+import { prepareData } from '../../utils/utils';
+import useFetchData from '../../hooks/useFetchData';
 
 import StatsTable from '../../components/StatsTable/StatsTable';
 
@@ -8,6 +9,7 @@ const AllStats = () => {
     const [countriesStats, setCountriesStats] = useState(null);
     const [continentsStats, setContinentsStats] = useState(null);
     const [loading, setLoading] = useState(false);
+    const fetchStatsData = useFetchData();
 
 
     const extractData = useCallback((data) => {
@@ -30,49 +32,24 @@ const AllStats = () => {
       return [country, continents];
     }, [])
 
-    const prepareData = useCallback(({
-      country,
-      cases,
-      deaths,
-      tests
-    }) => {
-      const dataObject = {
-        name: country,
-        newCases: cases.new ? +cases.new.replace("+", "") : null,
-        activeCases: cases.active,
-        criticalCases: cases.critical,
-        recoveredCases: cases.recovered,
-        totalCases: cases.total,
-        newDeaths: deaths.new ? +deaths.new.replace("+", "") : null,
-        totalDeaths: deaths.total,
-        totalTests: tests.total
-      };
-
-      return dataObject;
-    }, [])
-
     useEffect(() => {
-      fetch("https://covid-193.p.rapidapi.com/statistics", {
-        method: "GET",
-        headers: {
-          "x-rapidapi-host": "covid-193.p.rapidapi.com",
-          "x-rapidapi-key": API_KEY,
-        },
+      fetchStatsData({
+        endPoint: 'statistics'
       })
-        .then((response) => response.json())
-        .then((data) => {
-          const { response } = data;
-          const dataFormated = response.map((country) => prepareData(country));
+      .then((response) => response.json())
+      .then((data) => {
+        const { response } = data;
+        const dataFormated = response.map((country) => prepareData(country));
 
-          const [country, continents] = extractData(dataFormated);
+        const [country, continents] = extractData(dataFormated);
 
-          setCountriesStats(country);
-          setContinentsStats(continents);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }, [prepareData, extractData]);
+        setCountriesStats(country);
+        setContinentsStats(continents);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    }, [extractData]);
 
 
     return (
