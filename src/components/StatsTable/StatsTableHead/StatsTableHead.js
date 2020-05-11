@@ -18,6 +18,7 @@ const StatsTableHead = props => {
             <TableCell
               sortDirection={orderBy === col.id ? order : false}
               key={col.id}
+              className={props.styleClass}
             >
               <TableSortLabel
                 active={orderBy === col.id}

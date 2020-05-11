@@ -10,10 +10,16 @@ import TableRow from "@material-ui/core/TableRow";
 
 import StatsTableHead from './StatsTableHead/StatsTableHead';
 import { makeStyles, createStyles } from '@material-ui/core/styles';
+import Paper from '@material-ui/core/Paper';
 
 const useStyles = makeStyles((theme) => createStyles({
   cell: {
-    fontWeight: 700
+    fontWeight: 500,
+    padding: '8px 12px',
+    backgroundColor: 'transparent'
+  },
+  smallWidth: {
+    width: '100px'
   },
   dangerCell: {
     background: theme.palette.error.dark,
@@ -27,6 +33,19 @@ const useStyles = makeStyles((theme) => createStyles({
   },
   alignRight: {
     textAlign: 'right'
+  },
+  tableRow: {
+    '&:hover': {
+      backgroundColor: theme.palette.action.hover
+    }
+  },
+  paper: {
+    marginTop: theme.spacing(4),
+    marginBottom: theme.spacing(4),
+    overflow: 'hidden'
+  },
+  tableContainer: {
+    marginBottom: '-1px'
   }
 }));
 
@@ -61,13 +80,13 @@ const StatsTable = React.memo(({ stats }) => {
     {
       id: "newCases",
       label: "New cases",
-      classes: [classes.cell, classes.alignRight, classes.warrningCell],
+      classes: [classes.cell, classes.alignRight, classes.warrningCell, classes.smallWidth],
       format: (value) => (value ? "+" + value.toLocaleString() : null),
     },
     {
       id: "newDeaths",
       label: "New deaths",
-      classes: [classes.cell, classes.alignRight, classes.dangerCell],
+      classes: [classes.cell, classes.alignRight, classes.dangerCell, classes.smallWidth],
       format: (value) => (value ? "+" + value.toLocaleString() : null),
     },
     {
@@ -136,31 +155,35 @@ const StatsTable = React.memo(({ stats }) => {
   }, []);
 
   return (
-    <TableContainer>
-      <Table stickyHeader aria-label="sticky table">
-        <StatsTableHead
-          onRequestSort={handleRequestSort}
-          columns={columns}
-          order={order}
-          orderBy={orderBy}
-        />
-        <TableBody>
-          {stableSort(stats, getComparator(order, orderBy)).map((el, i) => {
-            return (
-              <TableRow key={i}>
-                {columns.map((col) => {
-                  return (
-                    <TableCell key={col.id} className={col.classes ? col.classes : null}>
-                      {col.format ? col.format(el[col.id]) : el[col.id]}
-                    </TableCell>
-                  );
-                })}
-              </TableRow>
-            );
-          })}
-        </TableBody>
-      </Table>
-    </TableContainer>
+    <Paper className={classes.paper}>
+      <TableContainer className={classes.tableContainer}>
+        <Table stickyHeader aria-label="sticky table">
+          <StatsTableHead
+            onRequestSort={handleRequestSort}
+            columns={columns}
+            order={order}
+            orderBy={orderBy}
+            styleClass={classes.cell}
+          />
+          <TableBody>
+            {stableSort(stats, getComparator(order, orderBy)).map((el, i) => {
+              return (
+                <TableRow className={classes.tableRow} key={i}>
+                  {columns.map((col) => {
+                    return (
+                      <TableCell key={col.id} className={col.classes ? col.classes : null}>
+                        {col.format ? col.format(el[col.id]) : el[col.id]}
+                      </TableCell>
+                    );
+                  })}
+                </TableRow>
+              );
+            })}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </Paper>
+    
   );
 });
 
