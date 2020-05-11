@@ -17,12 +17,11 @@ const CountryStats = props => {
 
     
   useEffect(() => {
-    const date = formatDate(new Date());
+    
     setLoading(true);
     fetchStatsData({
-      endPoint: 'history',
+      endPoint: 'statistics',
       params: {
-        day: date,
         country: params.name
       }
     })
