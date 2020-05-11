@@ -11,6 +11,8 @@ export const formatDate = (d) => {
 
 
 export const prepareData = ({ country, cases, deaths, tests }) => {
+  const testPerCase = cases.total && tests.total ? Math.round(tests.total / cases.total ) : null;
+
   const dataObject = {
     name: country,
     newCases: cases.new ? +cases.new.replace("+", "") : null,
@@ -20,7 +22,8 @@ export const prepareData = ({ country, cases, deaths, tests }) => {
     totalCases: cases.total,
     newDeaths: deaths.new ? +deaths.new.replace("+", "") : null,
     totalDeaths: deaths.total,
-    totalTests: tests.total,
+    testPerCase,
+    totalTests: tests.total
   };
 
   return dataObject;

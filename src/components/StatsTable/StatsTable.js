@@ -114,6 +114,12 @@ const StatsTable = React.memo(({ stats }) => {
       format: (value) => (value ? value.toLocaleString() : null),
     },
     {
+      id: "testPerCase",
+      label: "Test per case",
+      classes: [classes.cell, classes.alignRight],
+      format: (value) => (value ? value.toLocaleString() : null),
+    },
+    {
       id: "totalTests",
       label: "Total tests",
       classes: [classes.cell, classes.alignRight],
@@ -171,7 +177,7 @@ const StatsTable = React.memo(({ stats }) => {
                 <TableRow className={classes.tableRow} key={i}>
                   {columns.map((col) => {
                     return (
-                      <TableCell key={col.id} className={col.classes ? col.classes : null}>
+                      <TableCell key={col.id} className={col.classes ? col.classes.join(' ') : null}>
                         {col.format ? col.format(el[col.id]) : el[col.id]}
                       </TableCell>
                     );
