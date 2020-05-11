@@ -80,13 +80,15 @@ const StatsTable = React.memo(({ stats }) => {
     {
       id: "newCases",
       label: "New cases",
-      classes: [classes.cell, classes.alignRight, classes.warrningCell, classes.smallWidth],
+      activeClass: classes.warrningCell,
+      classes: [classes.cell, classes.alignRight, classes.smallWidth],
       format: (value) => (value ? "+" + value.toLocaleString() : null),
     },
     {
       id: "newDeaths",
       label: "New deaths",
-      classes: [classes.cell, classes.alignRight, classes.dangerCell, classes.smallWidth],
+      activeClass: classes.dangerCell,
+      classes: [classes.cell, classes.alignRight, classes.smallWidth],
       format: (value) => (value ? "+" + value.toLocaleString() : null),
     },
     {
@@ -110,7 +112,8 @@ const StatsTable = React.memo(({ stats }) => {
     {
       id: "recoveredCases",
       label: "Revoered cases",
-      classes: [classes.cell, classes.alignRight, classes.successCell],
+      activeClass: classes.successCell,
+      classes: [classes.cell, classes.alignRight],
       format: (value) => (value ? value.toLocaleString() : null),
     },
     {
@@ -176,8 +179,10 @@ const StatsTable = React.memo(({ stats }) => {
               return (
                 <TableRow className={classes.tableRow} key={i}>
                   {columns.map((col) => {
+                    const className = [...col.classes, (col.activeClass && el[col.id] ? col.activeClass : null)];
+
                     return (
-                      <TableCell key={col.id} className={col.classes ? col.classes.join(' ') : null}>
+                      <TableCell key={col.id} className={className.join(' ')}>
                         {col.format ? col.format(el[col.id]) : el[col.id]}
                       </TableCell>
                     );
