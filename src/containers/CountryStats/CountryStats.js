@@ -32,23 +32,12 @@ const CountryStats = props => {
       const { response } = data;
 
       if (response.length === 0) {
-          history.push("/");
+        return history.push("/");
       }
-      const dataFormated = response
-      .map((data) => prepareData(data))
-      .reduce((sum, obj) => {
-        for (const prop in obj) {
-          if (prop !== "name") {
-            sum[prop] =
-            typeof sum[prop] === "undefined"
-                ? 0
-                : sum[prop] + obj[prop];
-          } else {
-            sum[prop] = obj[prop];
-          }
-        }
-        return sum;
-      }, {});
+
+      const [countryData] = response;
+
+      const dataFormated = prepareData(countryData);
 
       setCountryStats(dataFormated);
       setLoading(false);
@@ -82,20 +71,20 @@ const CountryStats = props => {
         <Grid item xs={6} sm={4}>
           <DataCard
             title="Total cases"
-            number={countryStats.totalCases}
+            number={countryStats.totalCases.toLocaleString()}
           />
         </Grid>
         <Grid item xs={6} sm={4}>
           <DataCard
             title="Total deaths"
-            number={countryStats.totalDeaths}
+            number={countryStats.totalDeaths.toLocaleString()}
             type="danger"
           />
         </Grid>
         <Grid item xs={6} sm={4}>
           <DataCard
             title="Total recovered cases"
-            number={countryStats.recoveredCases}
+            number={countryStats.recoveredCases.toLocaleString()}
             type="success"
           />
         </Grid>
