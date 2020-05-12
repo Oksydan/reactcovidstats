@@ -2,8 +2,15 @@ import React, { useState, useEffect, useCallback, Fragment } from 'react';
 import { prepareData } from '../../utils/utils';
 import useFetchData from '../../hooks/useFetchData';
 import Loader from '../../components/UI/Loader/Loader';
+import { makeStyles } from '@material-ui/core/styles';
 
 import StatsTable from '../../components/StatsTable/StatsTable';
+
+const useStyles = makeStyles(() => ({
+  heading: {
+    textAlign: 'center'
+  }
+}))
 
 const AllStats = () => {
 
@@ -11,6 +18,7 @@ const AllStats = () => {
   const [continentsStats, setContinentsStats] = useState(null);
   const [loading, setLoading] = useState(false);
   const fetchStatsData = useFetchData();
+  const classes = useStyles();
 
 
   const extractData = useCallback((data) => {
@@ -64,9 +72,9 @@ const AllStats = () => {
   if (countriesStats && continentsStats) {
     content = (
       <Fragment>
-        <h2>Stats for coutries</h2>
+        <h2 className={classes.heading}>Stats for countries</h2>
         <StatsTable stats={countriesStats} />
-        <h2>Stats for continents</h2>
+        <h2 className={classes.heading}>Stats for continents</h2>
         <StatsTable stats={continentsStats} />
       </Fragment>
     )
