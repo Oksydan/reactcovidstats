@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Fragment } from "react";
 import { useRouteMatch } from "react-router-dom";
 import { formatDate, prepareData } from "../../utils/utils";
 import { useHistory } from "react-router-dom";
 import useFetchData from '../../hooks/useFetchData';
 import Loader from '../../components/UI/Loader/Loader';
-
+import DataCard from '../../components/DataCard/DataCard';
+import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
 
 const CountryStats = props => {
   const { params } = useRouteMatch();
@@ -64,7 +66,44 @@ const CountryStats = props => {
   }
 
   if (countryStats) {
-    content = countryStats.name;
+    console.log(countryStats);
+    content = (
+    <Fragment>
+      <Typography gutterBottom variant="h3" component="h1" align="center" weight="700">
+        {countryStats.name}
+      </Typography>
+      <Grid
+        container
+        spacing={3}
+        direction="row"
+        justify="flex-start"
+        alignItems="stretch"
+      >
+        <Grid item xs={6} sm={4}>
+          <DataCard
+            title="Total cases"
+            number={countryStats.totalCases}
+          />
+        </Grid>
+        <Grid item xs={6} sm={4}>
+          <DataCard
+            title="Total deaths"
+            number={countryStats.totalDeaths}
+            type="danger"
+          />
+        </Grid>
+        <Grid item xs={6} sm={4}>
+          <DataCard
+            title="Total recovered cases"
+            number={countryStats.recoveredCases}
+            type="success"
+          />
+        </Grid>
+      </Grid>
+    </Fragment>
+   
+
+    );
   }
 
   return content;
