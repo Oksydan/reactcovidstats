@@ -34,6 +34,9 @@ const useStyles = makeStyles((theme) => ({
   alignRight: {
     textAlign: 'right'
   },
+  reversedDirection: {
+    flexDirection: 'row-reverse'
+  },
   tableRow: {
     '&:hover': {
       backgroundColor: theme.palette.action.hover
@@ -172,7 +175,7 @@ const StatsTable = React.memo(({ stats }) => {
             columns={columns}
             order={order}
             orderBy={orderBy}
-            styleClass={classes.cell}
+            styleClasses={[classes.cell, classes.reversedDirection, classes.alignRight]}
           />
           <TableBody>
             {stableSort(stats, getComparator(order, orderBy)).map((el, i) => {

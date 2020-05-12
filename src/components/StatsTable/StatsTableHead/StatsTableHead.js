@@ -11,14 +11,15 @@ const StatsTableHead = props => {
     const createSortHandler = (property) => (event) => {
       onRequestSort(event, property);
     };
+    const [cellStyle, reversedDirection, alignRiht] = props.styleClasses;
     return (
       <TableHead>
         <TableRow>
-          {columns.map((col) => (
+          {columns.map((col, i) => (
             <TableCell
               sortDirection={orderBy === col.id ? order : false}
               key={col.id}
-              className={props.styleClass}
+              className={[cellStyle, ...(i !== 0 ? [reversedDirection, alignRiht] : [])].join(' ')}
             >
               <TableSortLabel
                 active={orderBy === col.id}
