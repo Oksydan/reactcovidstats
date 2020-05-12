@@ -64,7 +64,9 @@ const AllStats = () => {
   if (countriesStats && continentsStats) {
     content = (
       <Fragment>
+        <h2>Stats for coutries</h2>
         <StatsTable stats={countriesStats} />
+        <h2>Stats for continents</h2>
         <StatsTable stats={continentsStats} />
       </Fragment>
     )
