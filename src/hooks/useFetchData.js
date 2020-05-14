@@ -1,3 +1,4 @@
+import { useCallback } from "react";
 import { API_KEY } from '../config/config';
 
 const formatParams = params => {
@@ -21,9 +22,9 @@ const formatParams = params => {
 
 const useFetchData = () => {
 
-  const fetchData = ({ endPoint, params }) => {
+  const sendRequest = useCallback(({ endPoint, params }) => {
     const fetchParams = params ? formatParams(params) : null;
-    
+
     const url = `https://covid-193.p.rapidapi.com/${endPoint}${fetchParams ? fetchParams : ''}`;
 
     return fetch(url, {
@@ -33,9 +34,10 @@ const useFetchData = () => {
         "x-rapidapi-key": API_KEY,
       },
     })
-  }
+  }, [])
+    
 
-  return fetchData;
+  return sendRequest;
 }
 
 export default useFetchData;

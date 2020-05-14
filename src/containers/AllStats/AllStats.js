@@ -36,6 +36,8 @@ const AllStats = () => {
   }, [])
 
   useEffect(() => {
+    let fetching = true;
+
     setLoading(true);
     fetchStatsData({
       endPoint: 'statistics'
@@ -47,14 +49,18 @@ const AllStats = () => {
 
       const [country, continents] = extractData(dataFormated);
 
-      setCountriesStats(country);
-      setContinentsStats(continents);
-      setLoading(false);
+      if (fetching) {
+        setCountriesStats(country);
+        setContinentsStats(continents);
+        setLoading(false);
+      }
     })
     .catch((err) => {
       setLoading(false);
       console.log(err);
     });
+
+    return () => fetching = false;
   }, [extractData, fetchStatsData]);
 
   let content = null;

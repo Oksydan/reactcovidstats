@@ -19,7 +19,9 @@ const CountryStats = props => {
 
     
   useEffect(() => {
-    
+    let fetching = true;
+    console.log('mount')
+
     setLoading(true);
     fetchStatsData({
       endPoint: 'statistics',
@@ -31,21 +33,25 @@ const CountryStats = props => {
     .then((data) => {
       const { response } = data;
 
-      if (response.length === 0) {
-        return history.push("/");
+      if (fetching) {
+        if (response.length === 0) {
+          return history.push("/");
+        }
+        const [countryData] = response;
+
+        const dataFormated = prepareData(countryData);
+
+        setCountryStats(dataFormated);
+        setLoading(false);
       }
 
-      const [countryData] = response;
-
-      const dataFormated = prepareData(countryData);
-
-      setCountryStats(dataFormated);
-      setLoading(false);
     })
     .catch((err) => {
       console.log(err);
       setLoading(false);
     });
+
+    return () => fetching = false;
   }, [params.name, history, fetchStatsData]);
 
   let content = null;
