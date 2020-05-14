@@ -55,7 +55,7 @@ const AllStats = () => {
       setLoading(false);
       console.log(err);
     });
-  }, [extractData]);
+  }, [extractData, fetchStatsData]);
 
   let content = null;
 

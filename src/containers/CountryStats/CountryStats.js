@@ -1,6 +1,6 @@
 import React, { useState, useEffect, Fragment } from "react";
 import { useRouteMatch } from "react-router-dom";
-import { formatDate, prepareData } from "../../utils/utils";
+import { prepareData, getPrecentageValue } from "../../utils/utils";
 import { useHistory } from "react-router-dom";
 import useFetchData from '../../hooks/useFetchData';
 import Loader from '../../components/UI/Loader/Loader';
@@ -46,7 +46,7 @@ const CountryStats = props => {
       console.log(err);
       setLoading(false);
     });
-  }, []);
+  }, [params.name, history, fetchStatsData]);
 
   let content = null;
 
@@ -55,7 +55,6 @@ const CountryStats = props => {
   }
 
   if (countryStats) {
-    console.log(countryStats);
     content = (
     <Fragment>
       <Typography gutterBottom variant="h3" component="h1" align="center" weight="700">
@@ -68,23 +67,50 @@ const CountryStats = props => {
         justify="flex-start"
         alignItems="stretch"
       >
-        <Grid item xs={6} sm={4}>
+        <Grid item xs={12} sm={6} md={4}>
           <DataCard
-            title="Total cases"
-            number={countryStats.totalCases.toLocaleString()}
+            title="Cases"
+            data={[
+              {
+                label: 'Total',
+                value: countryStats.totalCases.toLocaleString()
+              },
+              {
+                label: 'Active',
+                value: countryStats.activeCases.toLocaleString()
+              }
+            ]}
           />
         </Grid>
-        <Grid item xs={6} sm={4}>
+        <Grid item xs={12} sm={6} md={4}>
           <DataCard
-            title="Total deaths"
-            number={countryStats.totalDeaths.toLocaleString()}
+            title="Deaths"
+            data={[
+              {
+                label: 'Total',
+                value: countryStats.totalDeaths.toLocaleString()
+              },
+              {
+                label: 'Lethality rate',
+                value: getPrecentageValue(countryStats.totalDeaths, countryStats.totalCases)
+              }
+            ]}
             type="danger"
           />
         </Grid>
-        <Grid item xs={6} sm={4}>
+        <Grid item xs={12} sm={6} md={4}>
           <DataCard
-            title="Total recovered cases"
-            number={countryStats.recoveredCases.toLocaleString()}
+            title="Recovered cases"
+            data={[
+              {
+                label: 'Total',
+                value: countryStats.recoveredCases.toLocaleString()
+              },
+              {
+                label: 'Recovered rate',
+                value: getPrecentageValue(countryStats.recoveredCases, countryStats.totalCases)
+              }
+            ]}
             type="success"
           />
         </Grid>

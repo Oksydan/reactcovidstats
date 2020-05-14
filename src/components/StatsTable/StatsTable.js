@@ -154,7 +154,7 @@ const StatsTable = React.memo(({ stats }) => {
     return order === "desc"
       ? (a, b) => descendingComparator(a, b, orderBy)
       : (a, b) => -descendingComparator(a, b, orderBy);
-  }, []);
+  }, [descendingComparator]);
 
   const stableSort = useCallback((array, comparator) => {
     const stabilizedThis = array.map((el, index) => [el, index]);
