@@ -4,13 +4,12 @@ import { prepareData, getPrecentageValue, formatDate } from "../../utils/utils";
 import { useHistory } from "react-router-dom";
 import useFetchData from '../../hooks/useFetchData';
 import Loader from '../../components/UI/Loader/Loader';
-import DataCard from '../../components/DataCard/DataCard';
-import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { DatePicker, MuiPickersUtilsProvider  } from "@material-ui/pickers";
 import MomentUtils from '@date-io/moment';
 import Box from '@material-ui/core/Box';
 import { makeStyles } from '@material-ui/core/styles';
+import CountryStatsDisplay from '../../components/CountryStatsDisplay/CountryStatsDisplay';
 
 const useStyles = makeStyles((theme) => ({
   spacingBottom: {
@@ -25,10 +24,10 @@ const CountryStats = props => {
   const classes = useStyles();
 
   const [countryStats, setCountryStats] = useState(null);
+  const [historyCountryStats, setHistoryCountryStats] = useState(null);
   const [loading, setLoading] = useState(false);
   const [selectedDate, handleDateChange] = useState(new Date());
   const fetchStatsData = useFetchData();
-
 
     
   useEffect(() => {
@@ -96,82 +95,73 @@ const CountryStats = props => {
   }
 
   if (countryStats) {
+    const data = [
+      {
+        title: "Cases",
+        data: [
+          {
+            label: 'Total',
+            value: countryStats.totalCases.toLocaleString()
+          },
+          {
+            label: 'Active',
+            value: countryStats.activeCases.toLocaleString()
+          }
+        ]
+      },
+      {
+        title: "Deaths",
+        data: [
+          {
+            label: 'Total',
+            value: countryStats.totalDeaths.toLocaleString()
+          },
+          {
+            label: 'Lethality rate',
+            value: getPrecentageValue(countryStats.totalDeaths, countryStats.totalCases)
+          }
+        ],
+        type: "danger"
+      },
+      {
+        title: "Recovered cases",
+        data: [
+          {
+            label: 'Total',
+            value: countryStats.recoveredCases.toLocaleString()
+          },
+          {
+            label: 'Recovered rate',
+            value: getPrecentageValue(countryStats.recoveredCases, countryStats.totalCases)
+          }
+        ],
+        type: "success"
+      }
+    ];
+
     content = (
-    <Fragment>
-      <Typography gutterBottom variant="h3" component="h1" align="center" weight="700">
-        {countryStats.name}
-      </Typography>
-      
-      <MuiPickersUtilsProvider utils={MomentUtils}>
-        <Box component="div" align="center" className={classes.spacingBottom} >
-          <DatePicker
-            autoOk
-            label="Select date"
-            disableFuture
-            value={selectedDate}
-            onChange={handleDateChange}
-          />
-        </Box>
-      </MuiPickersUtilsProvider>
+      <Fragment>
+        <Typography gutterBottom variant="h3" component="h1" align="center" weight="700">
+          {countryStats.name}
+        </Typography>
+        
+          <MuiPickersUtilsProvider utils={MomentUtils}>
+            <Box component="div" align="center" className={classes.spacingBottom} >
+              <DatePicker
+                autoOk
+                label="Select date"
+                disableFuture
+                value={selectedDate}
+                onChange={handleDateChange}
+              />
+            </Box>
+          </MuiPickersUtilsProvider>
 
-      <Grid
-        container
-        spacing={3}
-        direction="row"
-        justify="flex-start"
-        alignItems="stretch"
-      >
-        <Grid item xs={12} sm={6} md={4}>
-          <DataCard
-            title="Cases"
-            data={[
-              {
-                label: 'Total',
-                value: countryStats.totalCases.toLocaleString()
-              },
-              {
-                label: 'Active',
-                value: countryStats.activeCases.toLocaleString()
-              }
-            ]}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6} md={4}>
-          <DataCard
-            title="Deaths"
-            data={[
-              {
-                label: 'Total',
-                value: countryStats.totalDeaths.toLocaleString()
-              },
-              {
-                label: 'Lethality rate',
-                value: getPrecentageValue(countryStats.totalDeaths, countryStats.totalCases)
-              }
-            ]}
-            type="danger"
-          />
-        </Grid>
-        <Grid item xs={12} sm={6} md={4}>
-          <DataCard
-            title="Recovered cases"
-            data={[
-              {
-                label: 'Total',
-                value: countryStats.recoveredCases.toLocaleString()
-              },
-              {
-                label: 'Recovered rate',
-                value: getPrecentageValue(countryStats.recoveredCases, countryStats.totalCases)
-              }
-            ]}
-            type="success"
-          />
-        </Grid>
-      </Grid>
-    </Fragment>
-   
+        
+        <CountryStatsDisplay data={data} />
 
+        
+      </Fragment>
     );
   }
 
