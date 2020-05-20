@@ -33,9 +33,13 @@ const CountryStats = props => {
   useEffect(() => {
     let fetching = true;
 
-    let fetch;
+    setLoading(true);
+    setHistoryCountryStats(null);
+
     const today = formatDate(new Date());
     let pickedDate;
+    let countryHistory = null;
+    let countryStats = null;
 
     if (selectedDate instanceof Date) {
       pickedDate = formatDate(selectedDate);
@@ -43,69 +47,101 @@ const CountryStats = props => {
       pickedDate = formatDate(selectedDate._d);
     }
 
-    if (today !== pickedDate) {
-      fetch = fetchStatsData({
-        endPoint: 'history',
-        params: {
-          country: params.name,
-          day: pickedDate
-        }
-      })
-    } else {
-      fetch = fetchStatsData({
+    const isPastDateSelected = today !== pickedDate;
+
+    (async () => {
+      if (isPastDateSelected) {
+        countryHistory = await fetchStatsData({
+          endPoint: 'history',
+          params: {
+            country: params.name,
+            day: pickedDate
+          }
+        })
+        .then((response) => response.json())
+        .then((data) => {
+          const { response } = data;
+
+          if (fetching) {
+            const [countryData] = response;
+
+            return prepareData(countryData);
+          }
+
+        })
+        .catch((err) => {
+          console.log(err);
+          setLoading(false);
+        });
+      }
+
+      countryStats = await fetchStatsData({
         endPoint: 'statistics',
         params: {
           country: params.name
         }
       })
-    }
+      .then((response) => response.json())
+      .then((data) => {
+        const { response } = data;
 
-    setLoading(true);
+        if (fetching) {
+          const [countryData] = response;
 
-    fetch
-    .then((response) => response.json())
-    .then((data) => {
-      const { response } = data;
-
-      if (fetching) {
-        if (response.length === 0) {
-          return history.push("/");
+          return prepareData(countryData);
         }
-        const [countryData] = response;
 
-        const dataFormated = prepareData(countryData);
-
-        setCountryStats(dataFormated);
+      })
+      .catch((err) => {
+        console.log(err);
         setLoading(false);
-      }
+      });
 
-    })
-    .catch((err) => {
-      console.log(err);
+
+      if (isPastDateSelected) {
+        setHistoryCountryStats(countryHistory);
+      }
+      setCountryStats(countryStats);
       setLoading(false);
-    });
+    })();
+
 
     return () => fetching = false;
   }, [params.name, history, fetchStatsData, selectedDate, formatDate]);
 
-  let content = null;
 
-  if (loading) {
-    content = <Loader />;
+  function valueDifference(val1, val2, formatToLocaleString = false) {
+    let returnValue;
+    let diff = val1 - val2;
+        diff = diff.toFixed(2);
+        diff = +diff.toString().replace('.00', '');
+
+      
+    if (formatToLocaleString) {
+      returnValue = diff.toLocaleString();
+    } else {
+      returnValue = diff;
+    }
+    
+
+    return diff > 0 ? '+' + returnValue : returnValue;
   }
 
-  if (countryStats) {
-    const data = [
+
+  function formatCountryData(data, comapreData = null) {
+    return [
       {
         title: "Cases",
         data: [
           {
             label: 'Total',
-            value: countryStats.totalCases.toLocaleString()
+            value: data.totalCases.toLocaleString(),
+            difference: comapreData ? valueDifference(data.totalCases, comapreData.totalCases, true) : null
           },
           {
             label: 'Active',
-            value: countryStats.activeCases.toLocaleString()
+            value: data.activeCases.toLocaleString(),
+            difference: comapreData ? valueDifference(data.activeCases, comapreData.activeCases, true) : null
           }
         ]
       },
@@ -114,11 +150,13 @@ const CountryStats = props => {
         data: [
           {
             label: 'Total',
-            value: countryStats.totalDeaths.toLocaleString()
+            value: data.totalDeaths.toLocaleString(),
+            difference: comapreData ? valueDifference(data.totalDeaths, comapreData.totalDeaths, true) : null
           },
           {
             label: 'Lethality rate',
-            value: getPrecentageValue(countryStats.totalDeaths, countryStats.totalCases)
+            value: getPrecentageValue(data.totalDeaths, data.totalCases) + '%',
+            difference: comapreData ? valueDifference(getPrecentageValue(data.totalDeaths, data.totalCases), getPrecentageValue(comapreData.totalDeaths, comapreData.totalCases)) + '%' : null
           }
         ],
         type: "danger"
@@ -128,16 +166,40 @@ const CountryStats = props => {
         data: [
           {
             label: 'Total',
-            value: countryStats.recoveredCases.toLocaleString()
+            value: data.recoveredCases.toLocaleString(),
+            difference: comapreData ? valueDifference(data.recoveredCases, comapreData.recoveredCases, true) : null
           },
           {
             label: 'Recovered rate',
-            value: getPrecentageValue(countryStats.recoveredCases, countryStats.totalCases)
+            value: getPrecentageValue(data.recoveredCases, data.totalCases) + '%',
+            difference: comapreData ? valueDifference(getPrecentageValue(data.recoveredCases, data.totalCases), getPrecentageValue(comapreData.recoveredCases, comapreData.totalCases)) + '%' : null
           }
         ],
         type: "success"
       }
-    ];
+    ]
+  }
+
+
+  let content = null;
+  let pastStats = null;
+
+  if (loading) {
+    content = <Loader />;
+  }
+
+  if (countryStats) {
+
+    let presentData;
+
+    if (historyCountryStats) {
+
+      presentData = formatCountryData(countryStats, historyCountryStats);
+      pastStats = formatCountryData(historyCountryStats);
+
+    } else {
+      presentData = formatCountryData(countryStats);
+    }
 
     content = (
       <Fragment>
@@ -158,7 +220,9 @@ const CountryStats = props => {
           </MuiPickersUtilsProvider>
 
         
-        <CountryStatsDisplay data={data} />
+        <CountryStatsDisplay data={presentData} title={historyCountryStats ? "Present statistics" : null} />
+
+        {historyCountryStats ? <CountryStatsDisplay data={pastStats} title={'Data from ' + formatDate(selectedDate._d).split('-').reverse().join('.')} /> : null}
 
         
       </Fragment>

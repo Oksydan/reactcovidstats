@@ -34,5 +34,5 @@ export const getPrecentageValue = (numerator, denominator, digits = 2) => {
   if (typeof numerator !== 'number' || typeof denominator !== 'number') {
     throw Error('numerator and denominator have to be numbers');
   }
-  return ((numerator / denominator) * 100).toFixed(digits)  + '%';
+  return ((numerator / denominator) * 100).toFixed(digits);
 }

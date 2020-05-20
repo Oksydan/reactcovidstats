@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
@@ -33,6 +33,17 @@ const DataCard = ({ title, data, type = 'muted' }) => {
       <Typography variant="h5" component="p" align={i > 0 ? 'right' : 'left'} className={[classes[type], classes.mediumBold].join(' ')}>
         {el.value}
       </Typography>
+      {el.difference ? 
+        <Fragment>
+          <Typography variant="subtitle1" component="p" align={i > 0 ? 'right' : 'left'} className={classes[type]}>
+            Difference
+          </Typography>
+          <Typography variant="h5" component="p" align={i > 0 ? 'right' : 'left'} className={[classes[type], classes.mediumBold].join(' ')}>
+            {el.difference}
+          </Typography>
+        </Fragment>
+      :
+      null}
     </Grid>
   ))
 
