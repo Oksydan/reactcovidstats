@@ -28,7 +28,7 @@ const CountryStatsDisplay = ({ data, title }) => {
   return (
     <Fragment>
       {title ? 
-        <Typography gutterBottom gutterTop variant="h4" component="h2" align="center" weight="700">
+        <Typography gutterBottom variant="h4" component="h2" align="center" weight="700">
           {title}
         </Typography>
       :
