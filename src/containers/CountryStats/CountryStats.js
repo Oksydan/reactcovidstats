@@ -194,8 +194,8 @@ const CountryStats = props => {
 
     if (historyCountryStats) {
 
-      presentData = formatCountryData(countryStats, historyCountryStats);
-      pastStats = formatCountryData(historyCountryStats);
+      presentData = formatCountryData(countryStats);
+      pastStats = formatCountryData(historyCountryStats, countryStats);
 
     } else {
       presentData = formatCountryData(countryStats);
