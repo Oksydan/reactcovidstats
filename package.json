@@ -16,7 +16,7 @@
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.4.1"
   },
-  "homepage": "http://Oksydan.github.io/reactcovidstats",
+  "homepage": "http://oksydan.github.io/reactcovidstats",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
