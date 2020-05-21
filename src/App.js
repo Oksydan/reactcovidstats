@@ -6,7 +6,7 @@ import Container from '@material-ui/core/Container';
 
 
 const app = () => (
-  <BrowserRouter basename="{process.env.PUBLIC_URL}">
+  <BrowserRouter>
     <Container fixed>
       <Switch>
         <Route path="/country/:name/:date?">
