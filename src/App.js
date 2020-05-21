@@ -9,7 +9,7 @@ const app = () => (
   <BrowserRouter>
     <Container fixed>
       <Switch>
-        <Route path="/country/:name">
+        <Route path="/country/:name/:date?">
           <CountryStats />
         </Route>
         <Route path="/">

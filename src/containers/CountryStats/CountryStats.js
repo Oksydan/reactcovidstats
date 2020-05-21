@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Fragment } from "react";
+import React, { useState, useEffect, useCallback, Fragment } from "react";
 import { useRouteMatch } from "react-router-dom";
 import { prepareData, getPrecentageValue, formatDate } from "../../utils/utils";
 import { useHistory } from "react-router-dom";
@@ -26,36 +26,36 @@ const CountryStats = props => {
   const [countryStats, setCountryStats] = useState(null);
   const [historyCountryStats, setHistoryCountryStats] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [selectedDate, handleDateChange] = useState(new Date());
+  const [selectedDate, setSelectedDate] = useState(params.date ? params.date : formatDate(new Date()));
   const fetchStatsData = useFetchData();
 
+  const handleDateChange = useCallback((dataObj) => {
+    const date = formatDate(dataObj._d);
+    const { name } = params;
+    history.push(`/country/${name}/${date}`);
+    setSelectedDate(date);
+  }, [setSelectedDate, history, formatDate, params]);
     
   useEffect(() => {
     let fetching = true;
 
+    const {name} = params;
+
     setLoading(true);
     setHistoryCountryStats(null);
-
     const today = formatDate(new Date());
-    let pickedDate;
     let countryHistory = null;
     let countryStats = null;
 
-    if (selectedDate instanceof Date) {
-      pickedDate = formatDate(selectedDate);
-    } else {
-      pickedDate = formatDate(selectedDate._d);
-    }
-
-    const isPastDateSelected = today !== pickedDate;
+    const isPastDateSelected = today !== selectedDate;
 
     (async () => {
       if (isPastDateSelected) {
         countryHistory = await fetchStatsData({
           endPoint: 'history',
           params: {
-            country: params.name,
-            day: pickedDate
+            country: name,
+            day: selectedDate
           }
         })
         .then((response) => response.json())
@@ -78,7 +78,7 @@ const CountryStats = props => {
       countryStats = await fetchStatsData({
         endPoint: 'statistics',
         params: {
-          country: params.name
+          country: name
         }
       })
       .then((response) => response.json())
@@ -107,7 +107,7 @@ const CountryStats = props => {
 
 
     return () => fetching = false;
-  }, [params.name, history, fetchStatsData, selectedDate, formatDate]);
+  }, [params, history, fetchStatsData, selectedDate, formatDate]);
 
 
   function valueDifference(val1, val2, formatToLocaleString = false) {
@@ -219,7 +219,7 @@ const CountryStats = props => {
           </Box>
         </MuiPickersUtilsProvider>
 
-        {historyCountryStats ? <CountryStatsDisplay data={pastStats} title={'Data from ' + formatDate(selectedDate._d).split('-').reverse().join('.')} /> : null}
+        {historyCountryStats ? <CountryStatsDisplay data={pastStats} title={'Data from ' + selectedDate.split('-').reverse().join('.')} /> : null}
 
         
         <CountryStatsDisplay data={presentData} title={historyCountryStats ? "Present statistics" : null} />
