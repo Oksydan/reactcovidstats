@@ -1,19 +1,19 @@
 {
   "files": {
-    "main.js": "/reactcovidstats/static/js/main.ba2e1acd.chunk.js",
-    "main.js.map": "/reactcovidstats/static/js/main.ba2e1acd.chunk.js.map",
-    "runtime-main.js": "/reactcovidstats/static/js/runtime-main.e9fb02ed.js",
-    "runtime-main.js.map": "/reactcovidstats/static/js/runtime-main.e9fb02ed.js.map",
-    "static/js/2.fe14f1eb.chunk.js": "/reactcovidstats/static/js/2.fe14f1eb.chunk.js",
-    "static/js/2.fe14f1eb.chunk.js.map": "/reactcovidstats/static/js/2.fe14f1eb.chunk.js.map",
-    "index.html": "/reactcovidstats/index.html",
-    "precache-manifest.8d775843909b9e6c771c68351b887f96.js": "/reactcovidstats/precache-manifest.8d775843909b9e6c771c68351b887f96.js",
-    "service-worker.js": "/reactcovidstats/service-worker.js",
-    "static/js/2.fe14f1eb.chunk.js.LICENSE.txt": "/reactcovidstats/static/js/2.fe14f1eb.chunk.js.LICENSE.txt"
+    "main.js": "reactcovidstats/static/js/main.3c3585e7.chunk.js",
+    "main.js.map": "reactcovidstats/static/js/main.3c3585e7.chunk.js.map",
+    "runtime-main.js": "reactcovidstats/static/js/runtime-main.25cd10dd.js",
+    "runtime-main.js.map": "reactcovidstats/static/js/runtime-main.25cd10dd.js.map",
+    "static/js/2.fe14f1eb.chunk.js": "reactcovidstats/static/js/2.fe14f1eb.chunk.js",
+    "static/js/2.fe14f1eb.chunk.js.map": "reactcovidstats/static/js/2.fe14f1eb.chunk.js.map",
+    "index.html": "reactcovidstats/index.html",
+    "precache-manifest.eee5e523d34d69d6cd8b16fb735e8aed.js": "reactcovidstats/precache-manifest.eee5e523d34d69d6cd8b16fb735e8aed.js",
+    "service-worker.js": "reactcovidstats/service-worker.js",
+    "static/js/2.fe14f1eb.chunk.js.LICENSE.txt": "reactcovidstats/static/js/2.fe14f1eb.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
-    "static/js/runtime-main.e9fb02ed.js",
+    "static/js/runtime-main.25cd10dd.js",
     "static/js/2.fe14f1eb.chunk.js",
-    "static/js/main.ba2e1acd.chunk.js"
+    "static/js/main.3c3585e7.chunk.js"
   ]
 }
