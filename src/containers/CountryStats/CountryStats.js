@@ -206,23 +206,24 @@ const CountryStats = props => {
         <Typography gutterBottom variant="h3" component="h1" align="center" weight="700">
           {countryStats.name}
         </Typography>
-        
-          <MuiPickersUtilsProvider utils={MomentUtils}>
-            <Box component="div" align="center" className={classes.spacingBottom} >
-              <DatePicker
-                autoOk
-                label="Select date"
-                disableFuture
-                value={selectedDate}
-                onChange={handleDateChange}
-              />
-            </Box>
-          </MuiPickersUtilsProvider>
+      
+        <MuiPickersUtilsProvider utils={MomentUtils}>
+          <Box component="div" align="center" className={classes.spacingBottom} >
+            <DatePicker
+              autoOk
+              label="Select date"
+              disableFuture
+              value={selectedDate}
+              onChange={handleDateChange}
+            />
+          </Box>
+        </MuiPickersUtilsProvider>
+
+        {historyCountryStats ? <CountryStatsDisplay data={pastStats} title={'Data from ' + formatDate(selectedDate._d).split('-').reverse().join('.')} /> : null}
 
         
         <CountryStatsDisplay data={presentData} title={historyCountryStats ? "Present statistics" : null} />
 
-        {historyCountryStats ? <CountryStatsDisplay data={pastStats} title={'Data from ' + formatDate(selectedDate._d).split('-').reverse().join('.')} /> : null}
 
         
       </Fragment>
