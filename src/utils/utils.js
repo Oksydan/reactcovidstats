@@ -23,7 +23,8 @@ export const prepareData = ({ country, cases, deaths, tests }) => {
     newDeaths: deaths.new ? +deaths.new.replace("+", "") : null,
     totalDeaths: deaths.total,
     testPerCase,
-    totalTests: tests.total
+    totalTests: tests.total,
+    display: true
   };
 
   return dataObject;

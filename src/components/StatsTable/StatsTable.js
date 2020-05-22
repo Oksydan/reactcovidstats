@@ -179,6 +179,10 @@ const StatsTable = React.memo(({ stats }) => {
           />
           <TableBody>
             {stableSort(stats, getComparator(order, orderBy)).map((el, i) => {
+              
+              if (!el.display) {
+                return null;
+              }
               return (
                 <TableRow className={classes.tableRow} key={i}>
                   {columns.map((col) => {
